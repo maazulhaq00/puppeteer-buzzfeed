@@ -60,6 +60,16 @@ browserOpenPromise
 		);
 	})
 	.then(async function () {
+		const idsArr = await page.evaluate(() => {
+			return Array.from(
+				document.querySelectorAll(
+					'div.js-subbuzz-wrapper div:nth-child(1) div.subbuzz'
+				)
+			)
+				.map((x) => x.id)
+				.filter((x) => x !== '');
+		});
+
 		const pricesArr = await page.evaluate(() => {
 			return Array.from(
 				document.querySelectorAll(
@@ -80,6 +90,8 @@ browserOpenPromise
 
 		console.log(pricesArr.length);
 		console.log(pricesArr);
+		console.log(idsArr.length);
+		console.log(idsArr);
 
 		for (let i in pricesArr) {
 			pricesArr[i] = pricesArr[i].replace('$', '');
@@ -90,11 +102,11 @@ browserOpenPromise
 				// wishlist-button_wordWrapper__nDRNW
 				// `#mod-subbuzz-photoset-${i + 1} div:nth-child(4) div div button`
 				await page.waitForSelector(
-					'wishlist-button_button__Bkgar.wishlist-button_wishButton__r__5E'
+					`#${idsArr[i]} div div div button.wishlist-button_button__Bkgar.wishlist-button_wishButton__r__5E`
 				);
 
 				await page.click(
-					'wishlist-button_button__Bkgar.wishlist-button_wishButton__r__5E'
+					`#${idsArr[i]} div div div button.wishlist-button_button__Bkgar.wishlist-button_wishButton__r__5E`
 				);
 			}
 		}
